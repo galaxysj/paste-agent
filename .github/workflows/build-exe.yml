@@ -34,18 +34,12 @@ jobs:
 
     - name: Copy EXE to Root and Push
       run: |
-        # 1. 빌드된 파일을 루트의 agent.exe로 복사
-        copy /y python\dist\paste-agent.exe agent.exe
+        # PowerShell 문법: Copy-Item -Force를 사용합니다.
+        Copy-Item -Path "python\dist\paste-agent.exe" -Destination "agent.exe" -Force
         
-        # 2. Git 설정
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # 3. 변경사항 스테이징 및 커밋
         git add agent.exe
-        
-        # 4. 변경사항이 있을 때만 커밋 (없으면 스킵)
         git diff-index --quiet HEAD || git commit -m "compile agent.exe"
-        
-        # 5. 푸시
         git push
