@@ -5,7 +5,7 @@ import urllib.parse
 import glob
 
 def run_agent():
-    print("Gemini Code Agent v2.3 (Context Search) 시작. (종료: 'quit')")
+    
     
     while True:
         user_input = input("> ").strip()
