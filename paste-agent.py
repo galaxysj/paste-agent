@@ -25,7 +25,7 @@ def run_agent():
                 if cmd_name == "writefile":
                     name, content = args.get('name'), args.get('content')
                     if os.path.exists(name):
-                        print(f"오류: '{name}' 파일이 이미 존재함")
+                        print(f"오류: '{name}' 파일이 이미 존재합니다.")
                     else:
                         with open(name, 'w', encoding='utf-8') as f:
                             f.write(content)
@@ -35,7 +35,7 @@ def run_agent():
                     target, old_str, new_str = args.get('target'), args.get('oldstring'), args.get('newstring')
                     with open(target, 'r', encoding='utf-8') as f: content = f.read()
                     if content.count(old_str) != 1:
-                        print(f"오류: 일치 개수 {content.count(old_str)}개 (1개여야 함)")
+                        print(f"오류: 일치 개수가 {content.count(old_str)}개입니다.")
                     else:
                         with open(target, 'w', encoding='utf-8') as f: f.write(content.replace(old_str, new_str))
                         print("완료")
