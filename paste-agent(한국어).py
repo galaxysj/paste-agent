@@ -1,10 +1,11 @@
-ㅇimport re
+import re
 import subprocess
 import os
 import urllib.parse
 import glob
 
 def run_agent():
+    print("Gemini Code Agent v2.3 (Context Search) 시작. (종료: 'quit')")
     
     while True:
         user_input = input("> ").strip()
@@ -15,11 +16,9 @@ def run_agent():
 
         for cmd_name, args_str in commands:
             try:
-                # 더 정교한 인자 파싱 (값 내부에 ;가 있어도 동작하도록)
                 args = {}
                 raw_pairs = re.findall(r'(\w+)\s*=\s*"(.*?)"(?=;|$|\s)', args_str, re.DOTALL)
                 for k, v in raw_pairs:
-                    # \n은 줄바꿈으로, \t는 공백 4칸으로 변환하여 들여쓰기 유지
                     args[k] = v.replace('\\n', '\n').replace('\\t', '    ')
 
                 if cmd_name == "writefile":
@@ -57,6 +56,25 @@ def run_agent():
 
                 elif cmd_name == "glob":
                     print("\n".join(glob.glob(args.get('pattern', '*'))))
+
+                # --- 업그레이드된 searchtext 기능 ---
+                elif cmd_name == "searchtext":
+                    query = args.get('query')
+                    print(f"🔍 '{query}' 주변 맥락 검색 결과:")
+                    for file_path in glob.glob('*'):
+                        if os.path.isfile(file_path):
+                            try:
+                                with open(file_path, 'r', encoding='utf-8') as f:
+                                    content = f.read()
+                                    idx = content.find(query)
+                                    if idx != -1:
+                                        # 앞뒤 30글자 추출 로직
+                                        start = max(0, idx - 30)
+                                        end = min(idx + len(query) + 30, len(content))
+                                        snippet = content[start:end].replace('\n', ' ') # 가독성 위해 줄바꿈 제거
+                                        print(f"📄 {file_path}: ...{snippet}...")
+                            except:
+                                pass
 
             except Exception as e:
                 print(f"오류: {str(e)}")
