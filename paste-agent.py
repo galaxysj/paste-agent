@@ -17,7 +17,7 @@ def run_agent():
         for cmd_name, args_str in commands:
             try:
                 args = {}
-                raw_pairs = re.findall(r'(\w+)\s*=\s*"(.*)"(?=;|(?:\)\s*$))', args_str, re.DOTALL)
+                raw_pairs = re.findall(r'(\w+)\s*=\s*"(.*?)"(?=;|\s*\))', args_str + ")", re.DOTALL)
                 for k, v in raw_pairs:
                     # \n -> 줄바꿈, \t -> 공백 4칸 치환
                     args[k] = v.replace('\\n', '\n').replace('\\t', '    ')
